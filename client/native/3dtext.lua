@@ -1,14 +1,12 @@
 local dbg = rdebug()
 
-function createMarker()
+function create3DText(text)
     local self = {}
-    self.type = 1
+    self.text = text or ''
     self.renderDistance = 20
     self.position = vector3(0,0,0)
-    self.dir = vector3(0,0,0)
-    self.rot = vector3(0,0,0)
+    self.font = nil
     self.scale = vector3(1,1,1)
-    self.rotation = false
     self.rendering = false
     self.stopRendering = false
     self.keys = {}
@@ -23,11 +21,21 @@ function createMarker()
         b = 255,
         a = 255
     }
-    self.setType = function(param)
-        self.type = param
+    self.scale = 0.1
+    self.size = 0.8
+    self.setScale = function(scale)
+        self.scale = scale
+        return self
     end
-    self.getType = function()
-        return self.type
+    self.getScale = function()
+        return self.scale
+    end
+    self.setSize = function(size)
+        self.size = size
+        return self
+    end
+    self.getSize = function()
+        return self.size
     end
     self.setPosition = function(pos)
         self.position = pos
@@ -35,12 +43,6 @@ function createMarker()
     end
     self.getPosition = function()
         return self.position
-    end
-    self.setDir = function(param)
-        self.dir = param
-    end
-    self.getDir = function()
-        return self.dir
     end
     self.setScale = function(param)
         self.scale = param
@@ -85,11 +87,12 @@ function createMarker()
     self.getRenderDistance = function()
         return self.renderDistance
     end
-    self.setRotation = function(param)
-        self.rotation = param
+    self.setFont = function(font)
+        self.font = font
+        return self
     end
-    self.getRotation = function()
-        return self.rotation
+    self.getFont = function()
+        return self.font
     end
     self.render = function()
         self.stopRendering = false
@@ -123,7 +126,7 @@ function createMarker()
                     end
                 elseif distance <= self.renderDistance*2 then
                     self.rendering = false
-                    Citizen.Wait(250)
+                    Citizen.Wait(500)
                 elseif distance <= self.renderDistance*5 then
                     self.rendering = false
                     Citizen.Wait(2500)
@@ -141,15 +144,15 @@ function createMarker()
                 end
                 if self.isIn then
                     Citizen.Wait(0)
-                else
-                    Citizen.Wait(100)
-                end
-                for _,key in pairs(self.keys) do
-                    if IsControlJustReleased(0,key) then
-                        if self.onKey ~= nil then
-                            self.onKey(key)
+                    for _,key in pairs(self.keys) do
+                        if IsControlJustReleased(0,key) then
+                            if self.onKey ~= nil then
+                                self.onKey(key)
+                            end
                         end
                     end
+                else
+                    Citizen.Wait(250)
                 end
             end
         end)
@@ -161,31 +164,24 @@ function createMarker()
                 end
                 if self.rendering then
                     Citizen.Wait(0)
-                    DrawMarker(
-                            self.type,
-                            self.position.x,
-                            self.position.y,
-                            self.position.z,
-                            self.dir.x,
-                            self.dir.y,
-                            self.dir.z,
-                            self.rot.x,
-                            self.rot.y,
-                            self.rot.z,
-                            self.scale.x,
-                            self.scale.y,
-                            self.scale.z,
-                            self.color.r,
-                            self.color.g,
-                            self.color.b,
-                            self.color.a,
-                            false,
-                            false,
-                            2,
-                            self.rotation,nil,nil,false
-                    )
+                    SetDrawOrigin(self.position.x, self.position.y, self.position.z, 0);
+                    if self.font ~= nil then
+                        SetTextFont(self.font)
+                    end
+                    SetTextProportional(0)
+                    SetTextScale(self.scale, self.size)
+                    SetTextColour(self.color.r,self.color.g,self.color.b,self.color.a)
+                    SetTextDropshadow(0, 0, 0, 0, 255)
+                    SetTextEdge(2, 0, 0, 0, 150)
+                    SetTextDropShadow()
+                    SetTextOutline()
+                    SetTextEntry("STRING")
+                    SetTextCentre(1)
+                    AddTextComponentString(self.text)
+                    DrawText(0.0, 0.0)
+                    ClearDrawOrigin()
                 else
-                    Citizen.Wait(50)
+                    Citizen.Wait(250)
                 end
             end
         end)
@@ -202,6 +198,13 @@ function createMarker()
         self.keys = keys
         return self
     end
+    self.setText = function(text)
+        self.text = text
+        return self
+    end
+    self.getText = function()
+        return self.text
+    end
     self.getKeys = function()
         return self.keys
     end
@@ -217,4 +220,4 @@ function createMarker()
     return self
 end
 
-exports('createMarker',createMarker)
+exports('create3DText',create3DText)

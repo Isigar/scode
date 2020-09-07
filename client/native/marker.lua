@@ -151,15 +151,15 @@ function createMarker(res)
                 end
                 if self.isIn then
                     Citizen.Wait(0)
-                else
-                    Citizen.Wait(100)
-                end
-                for _,key in pairs(self.keys) do
-                    if IsControlJustReleased(0,key) then
-                        if self.onKey ~= nil then
-                            self.onKey(key)
+                    for _,key in pairs(self.keys) do
+                        if IsControlJustReleased(0,key) then
+                            if self.onKey ~= nil then
+                                self.onKey(key)
+                            end
                         end
                     end
+                else
+                    Citizen.Wait(100)
                 end
             end
         end)
