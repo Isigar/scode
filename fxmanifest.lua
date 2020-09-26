@@ -3,6 +3,7 @@ games { 'gta5' }
 
 author 'Isigar'
 version '1.2.1'
+description 'Simple code for creating markers & 3D text in right way.'
 
 client_scripts {
     'client/native/*.lua',
@@ -17,3 +18,5 @@ shared_scripts {
     'config.lua',
     'shared/*.lua',
 }
+
+
