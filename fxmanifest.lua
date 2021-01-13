@@ -7,7 +7,7 @@ description 'Simple code for creating markers & 3D text in right way.'
 
 client_scripts {
     'client/native/*.lua',
-    'client/test/*.lua', --Run specifics tests
+    --'client/test/*.lua', --Run specifics tests
 }
 
 server_scripts {
