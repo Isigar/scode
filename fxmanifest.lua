@@ -6,6 +6,7 @@ version '1.2.1'
 description 'Simple code for creating markers & 3D text in right way.'
 
 client_scripts {
+    'client/model/*.lua',
     'client/native/*.lua',
     --'client/test/*.lua', --Run specifics tests
 }
